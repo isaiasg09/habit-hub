@@ -2,6 +2,7 @@ import { View } from "react-native";
 
 import { DAY_SIZE, HabitDay } from "../components/HabitDay";
 import { generateDatesFromYearBeginning } from "../utils/generate-dates-from-year-beginning";
+import { useNavigation } from "@react-navigation/native";
 
 export function DaysTable() {
   const datesFromYearStart = generateDatesFromYearBeginning();
@@ -9,10 +10,18 @@ export function DaysTable() {
   const amountOfDaysToFill =
     minimumSummaryDatesSizes - datesFromYearStart.length;
 
+  const { navigate } = useNavigation();
+
   return (
     <View className='flex-row flex-wrap'>
       {datesFromYearStart.map((date) => {
-        return <HabitDay key={date.toISOString()} />;
+        return (
+          <HabitDay
+            key={date.toISOString()}
+            onPress={() => navigate("day", { date: date.toISOString() })}
+            date={date}
+          />
+        );
       })}
 
       {amountOfDaysToFill > 0 &&
