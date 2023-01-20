@@ -10,6 +10,12 @@ module.exports = {
       gridTemplateRows: {
         7: "repeat(7, minmax(0, 1fr))",
       },
+      keyframes: {
+        scaleUp: {
+          "0%": { transform: "scale(0)" },
+          "100%": { transform: "scale(1)" },
+        },
+      },
     },
   },
   plugins: [],
