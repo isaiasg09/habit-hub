@@ -8,6 +8,7 @@ export async function appRoutes(app: FastifyInstance) {
     return "O que voce esta fazendo na Home?";
   });
 
+  // create a habit for specific week days
   app.post("/habits", async (request) => {
     const createhabitBody = z.object({
       title: z.string(),
@@ -33,6 +34,7 @@ export async function appRoutes(app: FastifyInstance) {
     });
   });
 
+  // get available habits for specific day
   app.get("/day", async (request) => {
     const getDayParams = z.object({
       date: z.coerce.date(),
@@ -70,5 +72,92 @@ export async function appRoutes(app: FastifyInstance) {
     });
 
     return { possibleHabits, completedHabits };
+  });
+
+  // complete and uncomplete a habit
+  app.patch("/habits/:id/toggle", async (request) => {
+    // route param => id param
+
+    const toggleHabitParams = z.object({ id: z.string().uuid() });
+
+    const { id } = toggleHabitParams.parse(request.params);
+
+    // To allow the user to complete/uncomplete a habit on a date before the current day, receive the date value (smt like that):
+    // const getDayParams = z.object({
+    //   date: z.coerce.date(),
+    // });
+
+    const today = dayjs().startOf("day").toDate();
+
+    let day = await prisma.day.findUnique({
+      where: {
+        date: today,
+      },
+    });
+
+    if (!day) {
+      day = await prisma.day.create({
+        data: {
+          date: today,
+        },
+      });
+    }
+
+    console.log(day);
+
+    // look for completed habit
+    const dayHabit = await prisma.dayHabit.findUnique({
+      where: {
+        day_id_habit_id: {
+          day_id: day.id,
+          habit_id: id,
+        },
+      },
+    });
+    // if a habit is completed, uncomplete the habit and vice-versa
+    if (dayHabit) {
+      // uncomplete habit
+      await prisma.dayHabit.delete({
+        where: {
+          id: dayHabit.id,
+        },
+      });
+    } else {
+      // complete habit
+      await prisma.dayHabit.create({
+        data: {
+          day_id: day.id,
+          habit_id: id,
+        },
+      });
+    }
+  });
+
+  // summary of days
+  app.get("/summary", async () => {
+    const summary = await prisma.$queryRaw`
+      SELECT 
+        D.id, 
+        D.date,
+        (
+          SELECT 
+            cast(count(*) as float)
+          FROM day_habits DH
+          WHERE DH.day_id = D.id
+        ) as completed,
+        (
+          SELECT 
+            cast(count(*) as float)
+          FROM habit_week_days HWD
+          JOIN habits H
+            on H.id = HWD.habit_id
+          WHERE 
+            HWD.week_day = cast(strftime('%w', D.date/1000.0, 'unixepoch') as int)
+            AND H.created_at <= D.date
+        ) as amount
+      FROM days D
+    `;
+
+    return summary;
   });
 }
