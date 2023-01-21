@@ -5,12 +5,14 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import colors from "tailwindcss/colors";
 import { Feather } from "@expo/vector-icons";
 
 import { BackButton } from "../components/BackButton";
 import { Checkbox } from "../components/Checkbox";
+import { api } from "../lib/axios";
 
 const availableWeekDays = [
   "Domingo",
@@ -24,6 +26,7 @@ const availableWeekDays = [
 
 export function New() {
   const [weekDays, setWeekDays] = useState<number[]>([]);
+  const [title, setTitle] = useState("");
 
   function handleToggleWeekDay(weekDayIndex: number) {
     if (weekDays.includes(weekDayIndex)) {
@@ -32,6 +35,27 @@ export function New() {
       );
     } else {
       setWeekDays((prevState) => [...prevState, weekDayIndex]);
+    }
+  }
+
+  async function handleCreateNewhabit() {
+    try {
+      if (!title.trim() || weekDays.length === 0) {
+        Alert.alert(
+          "Novo hábito - Erro",
+          "Informe o nome do habito e a recorrência"
+        );
+      }
+
+      await api.post("/habits", { title, weekDays });
+
+      setTitle("");
+      setWeekDays([]);
+
+      Alert.alert("Novo hábito", "Novo hábito criado com sucesso!");
+    } catch (error) {
+      Alert.alert("Ops", "Não foi possivel criar o novo hábito!");
+      console.log(error);
     }
   }
 
@@ -52,6 +76,8 @@ export function New() {
           placeholderTextColor={colors.zinc[500]}
           cursorColor='white'
           className='h-14 pl-4 rounded-lg mt-3 text-lg bg-zinc-800 text-white border-2 border-zinc-700 focus:border-green-600'
+          onChangeText={setTitle}
+          value={title}
         />
 
         <Text className='font-semibol mt-4 mb-3 text-white text-base'>
@@ -72,6 +98,7 @@ export function New() {
         <TouchableOpacity
           className='w-full h-14 flex-row items-center justify-center bg-green-600 rounded-lg mt-6'
           activeOpacity={0.7}
+          onPress={handleCreateNewhabit}
         >
           <Feather name='check' size={20} color={colors.white} />
 
