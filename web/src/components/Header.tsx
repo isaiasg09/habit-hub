@@ -15,7 +15,7 @@ export function Header() {
           className='border border-blue-500 font-semibold rounded-lg px-6 py-4 flex items-center gap-3 transition-all hover:border-blue-300 '
         >
           <Plus size={20} className='text-blue-500' />
-          new habit
+          novo hábito
         </Dialog.Trigger>
 
         <Dialog.Portal>
@@ -26,7 +26,7 @@ export function Header() {
             </Dialog.Close>
 
             <Dialog.Title className='text-3xl leading-tight font-bold'>
-              Create habit
+              Criar hábito
             </Dialog.Title>
 
             <NewHabitForm />

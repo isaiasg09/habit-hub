@@ -1,4 +1,4 @@
-// import "./src/lib/dayjs.ts";
+import "./src/lib/dayjs.ts";
 
 import { StatusBar } from "react-native";
 import {

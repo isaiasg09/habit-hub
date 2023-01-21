@@ -1,15 +1,22 @@
 import * as Popover from "@radix-ui/react-popover";
 import { ProgressBar } from "./ProgressBar";
 import clsx from "clsx";
-import { X } from "phosphor-react";
+import { Check, X } from "phosphor-react";
+import * as Checkbox from "@radix-ui/react-checkbox";
+import dayjs from "dayjs";
 
 interface HabitDayProps {
-  completed: number;
-  amount: number;
+  completed?: number;
+  amount?: number;
+  date: Date;
 }
 
-export function HabitDay({ completed, amount }: HabitDayProps) {
-  const completedPercentage = Math.round((completed / amount) * 100);
+export function HabitDay({ completed = 0, amount = 0, date }: HabitDayProps) {
+  const completedPercentage =
+    amount > 0 ? Math.round((completed / amount) * 100) : 0;
+
+  const dayOfWeek = dayjs(date).format("dddd");
+  const dayAndMonth = dayjs(date).format("DD/MM");
 
   return (
     <Popover.Root>
@@ -33,11 +40,15 @@ export function HabitDay({ completed, amount }: HabitDayProps) {
 
       <Popover.Portal>
         <Popover.Content className='min-w-[320px] p-6 rounded-2xl bg-zinc-900 text-white flex flex-col animate-[scaleUp_.2s_ease-in-out]'>
+          {/* <Popover.Arrow height={8} width={16} className="fill-zinc-900"/> */}
+
           <div className='flex items-start justify-between'>
             <div className='flex flex-col'>
-              <span className='font-semibold text-zinc-400'>sexta-feira</span>
+              <span className='font-semibold text-zinc-400 lowercase'>
+                {dayOfWeek}
+              </span>
               <span className='mt-1 font-bold leading-tight text-3xl'>
-                20/01
+                {dayAndMonth}
               </span>
             </div>
 
@@ -48,7 +59,19 @@ export function HabitDay({ completed, amount }: HabitDayProps) {
 
           <ProgressBar progress={completedPercentage} />
 
-          {/* <Popover.Arrow height={8} width={16} className="fill-zinc-900"/> */}
+          <div className='mt-5 flex flex-col gap-3'>
+            <Checkbox.Root className='flex items-center gap-3 group'>
+              <div className='h-8 w-8 rounded-lg flex items-center justify-center bg-zinc-900 border-2 border-zinc-800 group-data-[state=checked]:bg-green-500 group-data-[state=checked]:border-green-500'>
+                <Checkbox.Indicator>
+                  <Check size={20} className='text-white' />
+                </Checkbox.Indicator>
+              </div>
+
+              <span className='text-white font-semibold text-xl leading-tight group-data-[state=checked]:line-through group-data-[state=checked]:text-zinc-400'>
+                Accept terms and conditions.
+              </span>
+            </Checkbox.Root>
+          </div>
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>

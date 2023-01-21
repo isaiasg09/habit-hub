@@ -19,7 +19,7 @@ const availableWeekDays = [
   "Quarta-feira",
   "Quinta-feira",
   "Sexta-feira",
-  "Sabado",
+  "Sábado",
 ];
 
 export function New() {
@@ -41,10 +41,10 @@ export function New() {
         <BackButton />
 
         <Text className='mt-6 text-white font-extrabold text-3xl'>
-          Create habit
+          Criar hábito
         </Text>
         <Text className='mt-6 text-white font-semibold text-base'>
-          What's your new habit name?
+          Qual o seu novo comprometimento?
         </Text>
 
         <TextInput
@@ -55,7 +55,7 @@ export function New() {
         />
 
         <Text className='font-semibol mt-4 mb-3 text-white text-base'>
-          What's the frequency?
+          Qual a recorrência?
         </Text>
 
         {availableWeekDays.map((weekDay, index) => {
@@ -76,7 +76,7 @@ export function New() {
           <Feather name='check' size={20} color={colors.white} />
 
           <Text className='font-semibold text-base text-white ml-2'>
-            Confirm
+            Confirmar
           </Text>
         </TouchableOpacity>
       </ScrollView>
