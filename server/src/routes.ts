@@ -34,6 +34,10 @@ export async function appRoutes(app: FastifyInstance) {
     });
   });
 
+  app.get("/habits", async (req, res) => {
+    return prisma.habit.findMany();
+  });
+
   // get available habits for specific day
   app.get("/day", async (request) => {
     const getDayParams = z.object({
@@ -104,7 +108,6 @@ export async function appRoutes(app: FastifyInstance) {
       });
     }
 
-
     // look for completed habit
     const dayHabit = await prisma.dayHabit.findUnique({
       where: {
@@ -131,6 +134,33 @@ export async function appRoutes(app: FastifyInstance) {
         },
       });
     }
+  });
+
+  app.delete("/habits/:id", async (request) => {
+    const deleteHabitParams = z.object({ id: z.string().uuid() });
+
+    const { id } = deleteHabitParams.parse(request.params);
+
+    const habit = await prisma.habit.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        weekDays: true,
+      },
+    });
+
+    if (!habit) {
+      throw new Error("Habit not found");
+    }
+
+    const deleteHabit = await prisma.habit.delete({
+      where: {
+        id: id,
+      },
+    });
+
+    return deleteHabit;
   });
 
   // summary of days
