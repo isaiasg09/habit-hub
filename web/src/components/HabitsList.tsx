@@ -80,6 +80,8 @@ export function HabitsList({ date, onCompletedChanged }: HabitsListProps) {
       completedHabits = habitsInfo!.completedHabits.filter(
         (id) => id !== habitId
       );
+    } else {
+      completedHabits = habitsInfo!.completedHabits;
     }
 
     setHabitsInfo({
