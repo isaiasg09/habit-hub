@@ -29,7 +29,7 @@ export function Header() {
               Criar hábito
             </Dialog.Title>
 
-            <NewHabitForm />
+            <NewHabitForm  />
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>

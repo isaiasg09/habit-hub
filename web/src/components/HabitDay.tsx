@@ -18,14 +18,17 @@ export function HabitDay({
   date,
 }: HabitDayProps) {
   const [completed, setCompleted] = useState(defaultCompleted);
-
-  const completedPercentage =
-    amount > 0 ? Math.round((completed / amount) * 100) : 0;
+  const [completedPercentage, setCompletedPercentage] = useState(
+    amount > 0 ? Math.round((completed / amount) * 100) : 0
+  );
 
   const dayOfWeek = dayjs(date).format("dddd");
   const dayAndMonth = dayjs(date).format("DD/MM");
 
-  function handleCompletedChanged(completed: number) {
+  function handleCompletedChanged(completed: number, amount: number) {
+    setCompletedPercentage(
+      amount > 0 ? Math.round((completed / amount) * 100) : 0
+    );
     setCompleted(completed);
   }
 
@@ -50,21 +53,21 @@ export function HabitDay({
       />
 
       <Popover.Portal>
-        <Popover.Content className='min-w-[320px] p-6 rounded-2xl bg-zinc-900 text-white flex flex-col animate-[scaleUp_.2s_ease-in-out]'>
+        <Popover.Content className="min-w-[320px] p-6 rounded-2xl bg-zinc-900 text-white flex flex-col animate-[scaleUp_.2s_ease-in-out]">
           {/* <Popover.Arrow height={8} width={16} className="fill-zinc-900"/> */}
 
-          <div className='flex items-start justify-between'>
-            <div className='flex flex-col'>
-              <span className='font-semibold text-zinc-400 lowercase'>
+          <div className="flex items-start justify-between">
+            <div className="flex flex-col">
+              <span className="font-semibold text-zinc-400 lowercase">
                 {dayOfWeek}
               </span>
-              <span className='mt-1 font-bold leading-tight text-3xl'>
+              <span className="mt-1 font-bold leading-tight text-3xl">
                 {dayAndMonth}
               </span>
             </div>
 
-            <Popover.Close className='rounded-2xl text-zinc-400 transition-all hover:text-zinc-200'>
-              <X size={24} aria-label='Close' />
+            <Popover.Close className="rounded-2xl text-zinc-400 transition-all hover:text-zinc-200">
+              <X size={24} aria-label="Close" />
             </Popover.Close>
           </div>
 

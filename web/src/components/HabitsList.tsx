@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 
 interface HabitsListProps {
   date: Date;
-  onCompletedChanged: (completed: number) => void;
+  onCompletedChanged: (completed: number, amount: number) => void;
 }
 
 interface HabitsInfo {
@@ -30,6 +30,8 @@ export function HabitsList({ date, onCompletedChanged }: HabitsListProps) {
       })
       .then((response) => {
         setHabitsInfo(response.data);
+        handleNewHabit(response.data);
+        // make a function to update the progress bar
       });
   }, []);
 
@@ -54,7 +56,10 @@ export function HabitsList({ date, onCompletedChanged }: HabitsListProps) {
       completedHabits,
     });
 
-    onCompletedChanged(completedHabits.length);
+    onCompletedChanged(
+      completedHabits.length,
+      habitsInfo!.possibleHabits.length
+    );
   }
 
   // make an async function to delete a habit when the button is clicked
@@ -82,7 +87,19 @@ export function HabitsList({ date, onCompletedChanged }: HabitsListProps) {
       completedHabits: completedHabits,
     });
 
-    onCompletedChanged(completedHabits.length);
+    onCompletedChanged(
+      completedHabits.length,
+      habitsInfo!.possibleHabits.length
+    );
+  }
+
+  function handleNewHabit(habitsInfo: HabitsInfo) {
+    const completedHabits = habitsInfo.completedHabits;
+
+    onCompletedChanged(
+      completedHabits.length,
+      habitsInfo!.possibleHabits.length
+    );
   }
 
   const isDateInPast = dayjs(date).endOf("day").isBefore(new Date());

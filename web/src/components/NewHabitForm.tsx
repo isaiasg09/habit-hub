@@ -49,6 +49,14 @@ export function NewHabitForm() {
     }
   }
 
+  
+
+  // function updateProgressbar() {
+  //   const progress = Math.round((completedHabits.length / possibleHabits.length) * 100);
+  //   setProgress(progress);
+  // }
+
+
   return (
     <form className='w-full flex flex-col mt-6' onSubmit={createNewHabit}>
       <label htmlFor='title' className='font-semibold leading-tight'>
