@@ -57,29 +57,69 @@ export function HabitsList({ date, onCompletedChanged }: HabitsListProps) {
     onCompletedChanged(completedHabits.length);
   }
 
+  // make an async function to delete a habit when the button is clicked
+  async function handleDeleteHabit(habitId: string) {
+    await api.delete(`/habits/${habitId}`);
+
+    const updatedHabitList = habitsInfo!.possibleHabits.filter(
+      (habit) => habit.id !== habitId
+    );
+
+    // check if habit was completed to change the progress bar
+    const isHabitAlreadyCompleted =
+      habitsInfo!.completedHabits.includes(habitId);
+
+    let completedHabits: string[] = [];
+
+    if (isHabitAlreadyCompleted) {
+      completedHabits = habitsInfo!.completedHabits.filter(
+        (id) => id !== habitId
+      );
+    }
+
+    setHabitsInfo({
+      possibleHabits: updatedHabitList,
+      completedHabits: completedHabits,
+    });
+
+    onCompletedChanged(completedHabits.length);
+  }
+
   const isDateInPast = dayjs(date).endOf("day").isBefore(new Date());
 
   return (
-    <div className='mt-5 flex flex-col gap-3'>
+    <div className="mt-5 flex flex-col gap-3">
       {habitsInfo?.possibleHabits.map((habit) => {
         return (
-          <Checkbox.Root
-            className='flex items-center gap-3 group focus:outline-none disabled:cursor-not-allowed disabled:brightness-50'
+          <div
+            className="flex items-center gap-3 group focus:outline-none disabled:cursor-not-allowed disabled:brightness-50"
             key={habit.id}
-            disabled={isDateInPast}
-            checked={habitsInfo.completedHabits.includes(habit.id)}
-            onCheckedChange={() => handleToggleHabit(habit.id)}
           >
-            <div className='h-8 w-8 rounded-lg flex items-center justify-center bg-zinc-900 border-2 border-zinc-800 group-data-[state=checked]:bg-green-500 group-data-[state=checked]:border-green-500 transition-all  group-focus:ring-2 group-focus:ring-blue-700 group-focus:ring-offset-darkbg'>
-              <Checkbox.Indicator>
-                <Check size={20} className='text-white' />
-              </Checkbox.Indicator>
-            </div>
+            <Checkbox.Root
+              className="flex items-center gap-3 group focus:outline-none disabled:cursor-not-allowed disabled:brightness-50"
+              key={habit.id}
+              disabled={isDateInPast}
+              checked={habitsInfo.completedHabits.includes(habit.id)}
+              onCheckedChange={() => handleToggleHabit(habit.id)}
+            >
+              <div className="h-8 w-8 rounded-lg flex items-center justify-center bg-zinc-900 border-2 border-zinc-800 group-data-[state=checked]:bg-green-500 group-data-[state=checked]:border-green-500 transition-all  group-focus:ring-2 group-focus:ring-blue-700 group-focus:ring-offset-darkbg">
+                <Checkbox.Indicator>
+                  <Check size={20} className="text-white" />
+                </Checkbox.Indicator>
+              </div>
 
-            <span className='text-white font-semibold text-xl leading-tight group-data-[state=checked]:line-through group-data-[state=checked]:text-zinc-400'>
-              {habit.title}
-            </span>
-          </Checkbox.Root>
+              <span className="text-white font-semibold text-xl leading-tight group-data-[state=checked]:line-through group-data-[state=checked]:text-zinc-400">
+                {habit.title}
+              </span>
+            </Checkbox.Root>
+
+            <button
+              className="text-3xl"
+              onClick={() => handleDeleteHabit(habit.id)}
+            >
+              -
+            </button>
+          </div>
         );
       })}
     </div>
