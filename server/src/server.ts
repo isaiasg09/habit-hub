@@ -6,20 +6,23 @@ const localtunnel = require("localtunnel");
 
 const app = Fastify();
 
-app.register(cors);
+app.register(cors, {
+  origin: true,
+});
+
 app.register(appRoutes);
 
 app
   .listen({
-    host: "0.0.0.0",
     port: 3333,
+    host: "0.0.0.0",
   })
-  .then(async () => {
+  .then(async (url) => {
     const tunnel = await localtunnel({
       local_host: "0.0.0.0",
       port: 3333,
-      subdomain: "dasmdyucbsy-api",
+      subdomain: "djsakdhjkas-api",
     });
 
-    console.log("HTTP Server Running!");
+    console.log("HTTP Server Running on port 3333");
   });

@@ -52,7 +52,7 @@ export function DaysTable() {
   return (
     <>
       {summary && (
-        <View className='flex-row flex-wrap'>
+        <View className="flex-row flex-wrap">
           {datesFromYearStart.map((date) => {
             const dayWithHabits = summary.find((day) => {
               return dayjs(date).isSame(day.date, "day");
@@ -73,7 +73,7 @@ export function DaysTable() {
             Array.from({ length: amountOfDaysToFill }).map((_, index) => {
               return (
                 <View
-                  className='bg-zinc-900 rounded-lg border-2 border-zinc-800 m-1 opacity-40'
+                  className="bg-zinc-900 rounded-lg border-2 border-zinc-800 m-1 opacity-40"
                   style={{ width: DAY_SIZE, height: DAY_SIZE }}
                   key={index}
                 />

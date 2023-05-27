@@ -31,7 +31,6 @@ export function HabitsList({ date, onCompletedChanged }: HabitsListProps) {
       .then((response) => {
         setHabitsInfo(response.data);
         handleNewHabit(response.data);
-        // make a function to update the progress bar
       });
   }, []);
 
@@ -62,7 +61,7 @@ export function HabitsList({ date, onCompletedChanged }: HabitsListProps) {
     );
   }
 
-  // make an async function to delete a habit when the button is clicked
+  // function to delete a habit when the button is clicked
   async function handleDeleteHabit(habitId: string) {
     await api.delete(`/habits/${habitId}`);
 
@@ -111,7 +110,7 @@ export function HabitsList({ date, onCompletedChanged }: HabitsListProps) {
       {habitsInfo?.possibleHabits.map((habit) => {
         return (
           <div
-            className="flex items-center gap-3 group focus:outline-none disabled:cursor-not-allowed disabled:brightness-50"
+            className="flex items-center justify-between gap-3 group focus:outline-none disabled:cursor-not-allowed disabled:brightness-50"
             key={habit.id}
           >
             <Checkbox.Root
@@ -133,8 +132,9 @@ export function HabitsList({ date, onCompletedChanged }: HabitsListProps) {
             </Checkbox.Root>
 
             <button
-              className="text-3xl"
+              className="text-3xl hover:scale-125 hover:text-red-600 transform transition-all focus:outline-none disabled:cursor-not-allowed disabled:brightness-50"
               onClick={() => handleDeleteHabit(habit.id)}
+              disabled={isDateInPast}
             >
               -
             </button>
