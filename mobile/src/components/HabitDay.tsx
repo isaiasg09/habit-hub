@@ -8,6 +8,8 @@ import {
 import clsx from "clsx";
 
 import { generateProgressPercentage } from "../utils/generate-progress-percentage";
+import { useEffect } from "react";
+import { api } from "../lib/axios";
 
 const WEEK_DAYS = 7;
 const SCREEN_HORIZONTAL_PADDING = (32 * 2) / 5;

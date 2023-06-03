@@ -32,7 +32,10 @@ export function DaysTable() {
       setLoading(true);
 
       const response = await api.get("summary");
+
       setSummary(response.data);
+
+      console.log(response.data);
     } catch (error) {
       Alert.alert("Ops", "Não foi possível carregar o sumario de dias");
       console.log(error);

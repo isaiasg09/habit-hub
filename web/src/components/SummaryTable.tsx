@@ -19,13 +19,9 @@ export function SummaryTable() {
   const amountOfDaysToFill = minimunSummaryDateSize - summaryDate.length;
 
   if (summaryDate.length > maximumSummaryDateSize) {
-    console.log(summaryDate.length, maximumSummaryDateSize);
-
     const rest = summaryDate.length % 7;
 
     summaryDate.splice(0, summaryDate.length - maximumSummaryDateSize - rest);
-
-    console.log(summaryDate.length, rest);
   }
 
   const [summary, setSummary] = useState<Summary>([]);

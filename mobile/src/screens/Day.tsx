@@ -8,6 +8,7 @@ import { Checkbox } from "../components/Checkbox";
 import { useEffect, useState } from "react";
 import { api } from "../lib/axios";
 import { Loading } from "../components/Loading";
+import { generateProgressPercentage } from "../utils/generate-progress-percentage";
 
 interface DayParams {
   date: string;
@@ -28,10 +29,16 @@ export function Day() {
   const parsedDate = dayjs(date);
   const dayOfWeek = parsedDate.format("dddd");
   const dayAndMonth = parsedDate.format("DD/MM");
-
-  const [dayInfo, setDayInfo] = useState<DayInfoProps>();
   const [loading, setLoading] = useState(true);
   const [completedHabits, setCompletedHabits] = useState<string[]>([]);
+  const [possibleHabits, setPossibleHabits] = useState<
+    Array<{
+      id: string;
+      title: string;
+    }>
+  >([]);
+  const [amountAccomplishedPercentage, setAmountAccomplishedPercentage] =
+    useState(0);
 
   function isDatePast() {
     const today = dayjs();
@@ -46,9 +53,17 @@ export function Day() {
           date: date.toString(),
         },
       });
-
-      setDayInfo(response.data);
       setCompletedHabits(response.data.completedHabits);
+      setPossibleHabits(response.data.possibleHabits);
+
+      setAmountAccomplishedPercentage(
+        response.data.possibleHabits.length > 0
+          ? generateProgressPercentage(
+              response.data.possibleHabits.length,
+              response.data.completedHabits.length
+            )
+          : 0
+      );
     } catch (error) {
       console.log(error);
       Alert.alert("Erro ao carregar os hábitos do dia");
@@ -62,15 +77,25 @@ export function Day() {
   }, []);
 
   async function handleToggleHabit(habitId: string) {
+    let newCompletedHabits;
     if (completedHabits.includes(habitId)) {
-      setCompletedHabits(completedHabits.filter((habit) => habit !== habitId));
+      newCompletedHabits = completedHabits.filter((habit) => habit !== habitId);
     } else {
-      setCompletedHabits([...completedHabits, habitId]);
+      newCompletedHabits = [...completedHabits, habitId];
     }
 
-    await api.patch(`/habits/${habitId}/toggle`);
+    setCompletedHabits(newCompletedHabits);
 
-    console.log(completedHabits);
+    setAmountAccomplishedPercentage(
+      possibleHabits.length > 0
+        ? generateProgressPercentage(
+            possibleHabits.length,
+            newCompletedHabits.length
+          )
+        : 0
+    );
+
+    await api.patch(`/habits/${habitId}/toggle`);
   }
 
   if (loading) {
@@ -90,20 +115,24 @@ export function Day() {
           {dayAndMonth}
         </Text>
 
-        <ProgressBar progress={90} />
+        <ProgressBar progress={amountAccomplishedPercentage} />
 
         <View className="mt-6">
-          {dayInfo?.possibleHabits.map((habit) => {
-            return (
-              <Checkbox
-                title={habit.title}
-                checked={completedHabits.includes(habit.id)}
-                key={habit.id}
-                onPress={() => handleToggleHabit(habit.id)}
-                // disabled={isDatePast()}
-              />
-            );
-          })}
+          {possibleHabits.length > 0 ? (
+            possibleHabits.map((habit) => {
+              return (
+                <Checkbox
+                  title={habit.title}
+                  checked={completedHabits.includes(habit.id)}
+                  key={habit.id}
+                  onPress={() => handleToggleHabit(habit.id)}
+                  disabled={isDatePast()}
+                />
+              );
+            })
+          ) : (
+            <Text className="text-white font-semibold text-base">Ainda não há habitos para esse dia</Text>
+          )}
         </View>
       </ScrollView>
     </View>
