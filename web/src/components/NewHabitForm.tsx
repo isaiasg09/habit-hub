@@ -22,7 +22,7 @@ export function NewHabitForm() {
     event.preventDefault();
 
     if (!title || weekDays.length === 0) {
-      toast.error("Preencha todas as informaçãoes");
+      toast.error("Preencha todas as informações");
       return;
     }
 

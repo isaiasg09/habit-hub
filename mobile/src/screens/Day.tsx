@@ -33,6 +33,11 @@ export function Day() {
   const [loading, setLoading] = useState(true);
   const [completedHabits, setCompletedHabits] = useState<string[]>([]);
 
+  function isDatePast() {
+    const today = dayjs();
+    return parsedDate.isBefore(today, "day");
+  }
+
   async function fetchHabits() {
     try {
       setLoading(true);
@@ -64,6 +69,8 @@ export function Day() {
     }
 
     await api.patch(`/habits/${habitId}/toggle`);
+
+    console.log(completedHabits);
   }
 
   if (loading) {
@@ -93,6 +100,7 @@ export function Day() {
                 checked={completedHabits.includes(habit.id)}
                 key={habit.id}
                 onPress={() => handleToggleHabit(habit.id)}
+                // disabled={isDatePast()}
               />
             );
           })}

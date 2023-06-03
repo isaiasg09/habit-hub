@@ -34,6 +34,7 @@ export async function appRoutes(app: FastifyInstance) {
     });
   });
 
+  // get all habits
   app.get("/habits", async (req, res) => {
     return prisma.habit.findMany();
   });
@@ -136,6 +137,7 @@ export async function appRoutes(app: FastifyInstance) {
     }
   });
 
+  // delete habit
   app.delete("/habits/:id", async (request) => {
     const deleteHabitParams = z.object({ id: z.string().uuid() });
 

@@ -48,6 +48,7 @@ export function HabitDay({
             "bg-blue-600 border-blue-500":
               completedPercentage >= 60 && completedPercentage < 80,
             "bg-blue-500 border-blue-400": completedPercentage >= 80,
+            "border-zinc-300": date.toDateString() == new Date().toDateString(),
           }
         )}
       />

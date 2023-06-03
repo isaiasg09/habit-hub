@@ -21,7 +21,7 @@ app
     const tunnel = await localtunnel({
       local_host: "0.0.0.0",
       port: 3333,
-      subdomain: "djsakdhjkas-api",
+      subdomain: "dbhsadhjas-api",
     });
 
     console.log("HTTP Server Running on port 3333");
