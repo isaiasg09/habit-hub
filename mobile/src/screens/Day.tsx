@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, Alert } from "react-native";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
 
 import { BackButton } from "../components/BackButton";
@@ -25,6 +25,7 @@ interface DayInfoProps {
 export function Day() {
   const route = useRoute();
   const { date } = route.params as DayParams;
+  const { navigate } = useNavigation();
 
   const parsedDate = dayjs(date);
   const dayOfWeek = parsedDate.format("dddd");
@@ -131,7 +132,21 @@ export function Day() {
               );
             })
           ) : (
-            <Text className="text-white font-semibold text-base">Ainda não há habitos para esse dia</Text>
+            <Text className="text-white fsont-semibold text-base">
+              Ainda não há habitos para esse dia.{" "}
+              <Text
+                className="text-violet-400 underline ml-3"
+                onPress={() => navigate("new")}
+              >
+                Comece criando um hábito.
+              </Text>
+            </Text>
+          )}
+
+          {isDatePast() && possibleHabits.length > 0 && (
+            <Text className="text-white font-semibold text-base mt-6">
+              Você não pode alterar os hábitos de um dia que já passou.
+            </Text>
           )}
         </View>
       </ScrollView>

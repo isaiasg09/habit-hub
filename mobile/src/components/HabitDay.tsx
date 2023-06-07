@@ -8,7 +8,7 @@ import {
 import clsx from "clsx";
 
 import { generateProgressPercentage } from "../utils/generate-progress-percentage";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { api } from "../lib/axios";
 
 const WEEK_DAYS = 7;
@@ -33,10 +33,12 @@ export function HabitDay({
   const today = dayjs().startOf("day").toDate();
   const isDateToday = date.getTime() === today.getTime();
 
-  const amountAccomplishedPercentage =
-    amountOfHabits > 0
-      ? generateProgressPercentage(amountOfHabits, amountCompleted)
-      : 0;
+  const [amountAccomplishedPercentage, setAmountAccomplishedPercentage] =
+    useState(
+      amountOfHabits > 0
+        ? generateProgressPercentage(amountOfHabits, amountCompleted)
+        : 0
+    );
 
   return (
     <TouchableOpacity
@@ -59,6 +61,7 @@ export function HabitDay({
       style={{ width: DAY_SIZE, height: DAY_SIZE }}
       activeOpacity={0.5}
       {...rest}
+      
     ></TouchableOpacity>
   );
 }
