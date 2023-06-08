@@ -32,11 +32,12 @@ export function ProgressBar({ progress = 0 }) {
 
   return (
     <Animated.View
-      entering={LightSpeedInLeft}
+      entering={LightSpeedInLeft.duration(500)}
       className="w-full h-3 rounded-xl bg-zinc-700 mt-4"
     >
       <Animated.View
         className="h-3 rounded-xl bg-violet-600 transition-all duration-200"
+        entering={LightSpeedInLeft.duration(700).delay(300)}
         style={style}
       />
     </Animated.View>

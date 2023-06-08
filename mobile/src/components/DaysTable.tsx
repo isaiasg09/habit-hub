@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { View, Alert } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import Animated, { FadeIn } from "react-native-reanimated";
 
 import { api } from "../lib/axios";
 
@@ -55,7 +56,7 @@ export function DaysTable() {
   return (
     <>
       {summary && (
-        <View className="flex-row flex-wrap">
+        <Animated.View entering={FadeIn} className="flex-row flex-wrap">
           {datesFromYearStart.map((date) => {
             const dayWithHabits = summary.find((day) => {
               return dayjs(date).isSame(day.date, "day");
@@ -82,7 +83,7 @@ export function DaysTable() {
                 />
               );
             })}
-        </View>
+        </Animated.View>
       )}
     </>
   );

@@ -1,5 +1,6 @@
 import { View, Text, ScrollView, Alert } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import Animated, { FadeIn } from "react-native-reanimated";
 import dayjs from "dayjs";
 
 import { BackButton } from "../components/BackButton";
@@ -108,13 +109,19 @@ export function Day() {
       <ScrollView showsVerticalScrollIndicator={false}>
         <BackButton />
 
-        <Text className="mt-6 text-zinc-400 font-semibold text-base lowercase">
+        <Animated.Text
+          entering={FadeIn}
+          className="mt-6 text-zinc-400 font-semibold text-base lowercase"
+        >
           {dayOfWeek}
-        </Text>
+        </Animated.Text>
 
-        <Text className="mt-1 text-white font-extrabold text-4xl">
+        <Animated.Text
+          entering={FadeIn}
+          className="mt-1 text-white font-extrabold text-4xl"
+        >
           {dayAndMonth}
-        </Text>
+        </Animated.Text>
 
         <ProgressBar progress={amountAccomplishedPercentage} />
 

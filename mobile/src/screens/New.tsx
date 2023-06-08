@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
+import Animated, { FadeIn, SlideInLeft } from "react-native-reanimated";
 import colors from "tailwindcss/colors";
 import { Feather } from "@expo/vector-icons";
 
@@ -64,48 +65,63 @@ export function New() {
       <ScrollView showsVerticalScrollIndicator={false}>
         <BackButton />
 
-        <Text className="mt-6 text-white font-extrabold text-3xl">
-          Criar hábito
-        </Text>
-        <Text className="mt-6 text-white font-semibold text-base">
-          Qual o seu novo comprometimento?
-        </Text>
-
-        <TextInput
-          placeholder="Go to gym, sleep 8h, read a book..."
-          placeholderTextColor={colors.zinc[500]}
-          cursorColor="white"
-          className="h-14 pl-4 rounded-lg mt-3 text-lg bg-zinc-800 text-white border-2 border-zinc-700 focus:border-green-600"
-          onChangeText={setTitle}
-          value={title}
-        />
-
-        <Text className="font-semibol mt-4 mb-3 text-white text-base">
-          Qual a recorrência?
-        </Text>
-
-        {availableWeekDays.map((weekDay, index) => {
-          return (
-            <Checkbox
-              title={weekDay}
-              key={weekDay + index}
-              checked={weekDays.includes(index)}
-              onPress={() => handleToggleWeekDay(index)}
-            />
-          );
-        })}
-
-        <TouchableOpacity
-          className="w-full h-14 flex-row items-center justify-center bg-green-600 rounded-lg mt-6"
-          activeOpacity={0.7}
-          onPress={handleCreateNewhabit}
+        <Animated.Text
+          entering={SlideInLeft.duration(800)}
+          className="mt-6 text-white font-extrabold text-3xl"
         >
-          <Feather name="check" size={20} color={colors.white} />
+          Criar hábito
+        </Animated.Text>
+        <Animated.Text
+          entering={SlideInLeft.duration(700).delay(200)}
+          className="mt-6 text-white font-semibold text-base"
+        >
+          Qual o seu novo comprometimento?
+        </Animated.Text>
 
-          <Text className="font-semibold text-base text-white ml-2">
-            Confirmar
-          </Text>
-        </TouchableOpacity>
+        <Animated.View entering={SlideInLeft.duration(500).delay(250)}>
+          <TextInput
+            placeholder="Go to gym, sleep 8h, read a book..."
+            placeholderTextColor={colors.zinc[500]}
+            cursorColor="white"
+            className="h-14 pl-4 rounded-lg mt-3 text-lg bg-zinc-800 text-white border-2 border-zinc-700 focus:border-green-600"
+            onChangeText={setTitle}
+            value={title}
+          />
+        </Animated.View>
+
+        <Animated.Text
+          entering={FadeIn.duration(400).delay(300)}
+          className="font-semibol mt-4 mb-3 text-white text-base"
+        >
+          Qual a recorrência?
+        </Animated.Text>
+
+        <Animated.View entering={FadeIn.duration(500).delay(400)}>
+          {availableWeekDays.map((weekDay, index) => {
+            return (
+              <Checkbox
+                title={weekDay}
+                key={weekDay + index}
+                checked={weekDays.includes(index)}
+                onPress={() => handleToggleWeekDay(index)}
+              />
+            );
+          })}
+        </Animated.View>
+
+        <Animated.View entering={FadeIn.duration(900).delay(500)}>
+          <TouchableOpacity
+            className="w-full h-14 flex-row items-center justify-center bg-green-600 rounded-lg mt-6"
+            activeOpacity={0.7}
+            onPress={handleCreateNewhabit}
+          >
+            <Feather name="check" size={20} color={colors.white} />
+
+            <Text className="font-semibold text-base text-white ml-2">
+              Confirmar
+            </Text>
+          </TouchableOpacity>
+        </Animated.View>
       </ScrollView>
     </View>
   );
