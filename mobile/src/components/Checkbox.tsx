@@ -5,6 +5,7 @@ import {
   Text,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
+import Animated, { SlideInLeft, ZoomOut } from "react-native-reanimated";
 import colors from "tailwindcss/colors";
 import clsx from "clsx";
 
@@ -26,9 +27,13 @@ export function Checkbox({
       disabled={disabled}
     >
       {checked ? (
-        <View className="h-8 w-8 bg-green-500 rounded-lg items-center justify-center">
+        <Animated.View
+          entering={SlideInLeft}
+          exiting={ZoomOut}
+          className="h-8 w-8 bg-green-500 rounded-lg items-center justify-center"
+        >
           <Feather name="check" size={20} color={colors.white} />
-        </View>
+        </Animated.View>
       ) : (
         <View className="h-8 w-8 bg-zinc-800 rounded-lg border-2 border-zinc-700"></View>
       )}

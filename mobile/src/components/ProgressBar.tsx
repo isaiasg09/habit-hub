@@ -3,6 +3,7 @@ import Animated, {
   withTiming,
   useAnimatedStyle,
   Easing,
+  LightSpeedInLeft,
 } from "react-native-reanimated";
 import { View } from "react-native";
 import { useEffect } from "react";
@@ -30,11 +31,14 @@ export function ProgressBar({ progress = 0 }) {
   });
 
   return (
-    <View className="w-full h-3 rounded-xl bg-zinc-700 mt-4">
+    <Animated.View
+      entering={LightSpeedInLeft}
+      className="w-full h-3 rounded-xl bg-zinc-700 mt-4"
+    >
       <Animated.View
         className="h-3 rounded-xl bg-violet-600 transition-all duration-200"
         style={style}
       />
-    </View>
+    </Animated.View>
   );
 }
