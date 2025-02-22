@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 
 export async function appRoutes(app: FastifyInstance) {
   app.get("/", () => {
-    return "O que voce esta fazendo na Home?";
+    return "O que voce esta fazendo na Home? uau";
   });
 
   // create a habit for specific week days
@@ -166,30 +166,68 @@ export async function appRoutes(app: FastifyInstance) {
   });
 
   // summary of days
+  // app.get("/summary", async () => {
+  //   const summary = await prisma.$queryRaw`
+  //     SELECT
+  //     D.id,
+  //     D.date,
+  //     (
+  //         SELECT COUNT(*)
+  //         FROM day_habits DH
+  //         WHERE DH.day_id = D.id
+  //     ) AS completed,
+  //     (
+  //         SELECT COUNT(*)
+  //         FROM habit_week_days HWD
+  //         JOIN habits H ON H.id = HWD.habit_id
+  //         WHERE
+  //             HWD.week_day = CAST(strftime('%w', D.date / 1000, 'unixepoch') AS INTEGER)
+  //             AND H.created_at <= D.date
+  //       ) AS amount
+  //     FROM days D;
+
+  //   `;
+
+  //   return summary;
+  // });
+
+  type SummaryItem = {
+    id: bigint;
+    date: bigint;
+    completed: bigint;
+    amount: bigint;
+  };
+
+  // Summary of days
   app.get("/summary", async () => {
-    const summary = await prisma.$queryRaw`
-      SELECT 
-        D.id, 
-        D.date,
-        (
-          SELECT 
-            CAST(COUNT(*)::float)
+    const summary: SummaryItem[] = await prisma.$queryRaw<SummaryItem[]>`
+    SELECT 
+      D.id, 
+      D.date,
+      (
+          SELECT COUNT(*)
           FROM day_habits DH
           WHERE DH.day_id = D.id
-        ) as completed,
-        (
-          SELECT 
-            CAST(COUNT(*)::float)
+      ) AS completed,
+      (
+          SELECT COUNT(*)
           FROM habit_week_days HWD
-          JOIN habits H
-            on H.id = HWD.habit_id
+          JOIN habits H ON H.id = HWD.habit_id
           WHERE 
-            HWD.week_day = CAST(strftime('%w', D.date/1000.0, 'unixepoch')::int)
-            AND H.created_at <= D.date
-        )::amount
-      FROM days D
-    `;
+              HWD.week_day = CAST(strftime('%w', D.date / 1000, 'unixepoch') AS INTEGER)
+              AND H.created_at <= D.date
+      ) AS amount
+    FROM days D;
+  `;
 
-    return summary;
+    // Converter BigInt para Number
+    const formattedSummary = summary.map((day: any) => ({
+      id: Number(day.id),
+      date: Number(day.date),
+      completed: Number(day.completed),
+      amount: Number(day.amount),
+    }));
+
+    return formattedSummary;
   });
 }

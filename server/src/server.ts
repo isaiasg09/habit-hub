@@ -21,7 +21,7 @@ app
     const tunnel = await localtunnel({
       local_host: "0.0.0.0",
       port: 3333,
-      subdomain: "sbhhs-api",
+      subdomain: "top5habithub-api",
     });
 
     console.log("HTTP Server Running on port 3333");
